@@ -31,7 +31,7 @@
         }
 
         getData.addEventListener('click', async () => {
-            await grab('/test/data')
+            await grab('/passport-protected/data')
                 .then(data => {
                     console.log('message: ' + data.message);
                     if(data.message === 'Authorised') {

@@ -10,7 +10,11 @@ router.get('/success', (req, res) => {
 })
 
 router.post('/register', passport.authenticate('register',{ failureRedirect: '/register'}),(req, res) => {
-    res.json({message:req.session.message,
+    const successToken = jwt.createToken(req.user);
+    return res.cookie("jwt",successToken, {
+        httpOnly: true,
+        secure: true
+    }).json({message:req.session.message,
         body: req.body,
         user: req.user,
         redirect: '/profile'
