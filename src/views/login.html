@@ -1,0 +1,96 @@
+<html>
+    <head>
+        <link href="/css/styles.css" rel="stylesheet" >
+        <title>Sign in</title>
+    </head>
+    <body>
+
+        <div class="flex flex-col justify-center mx-auto  w-[500px] min-h-[500px] bg-white p-5 ">
+                <div class="text-black text-2xl px-10 mt-10">
+                    <span id="options" class="text-indigo-800 font-bold text-[1.5em]">
+                        Welcome back
+                    </span>
+                </div>
+            <div class="mt-10 relative py-3 w-11/12 max-w-xl sm:mx-auto rounded-md border-[1px] border-gray-500">
+
+                <div class="text-red-900 text-xl text-center" id="validation">
+                </div>
+                <div class="relative p-8">
+                    <div class="mt-8 text-left w-full floating-input relative" id="formSpace">
+                        <form class="w-full">
+                            <div class="floating-input relative mb-5">
+                                <input placeholder="you@youremail.com" autocomplete="off" class="focus:outline-none border-gray-200 focus:ring-1 focus:ring-gray-500 h-16 p-3 rounded-md w-full border-0 focus:shadow-sm" type="email" id="email">
+                                <label for="Email" class="absolute top-0 left-0 px-3 h-full pointer-events-none transform origin-left transition-all duration-100 ease-in-out">Enter your email address:</label>
+                            </div>
+                            <div class="mt-3 floating-input relative mb-5">
+                                <input placeholder="Password" autocomplete="off" class="focus:outline-none p-3 h-16 rounded-md w-full border-0 focus:ring-gray-500 focus:shadow-sm" type="password" id="password">
+                                <label for="password" class="absolute top-0 left-0 px-3 h-full pointer-events-none transform origin-left transition-all duration-100 ease-in-out">Enter your password:</label>
+                            </div>
+                            <div class="mt-10">
+                                <button id="login" class="py-3 px-5 bg-purple-500  shadow-black shadow-sm w-[150px] transition-all rounded-md text-white transform hover:bg-purple-400 active:shadow-none">Sign in</button>
+                            </div>
+                        </div>
+                    </form>
+
+                </div>
+            </div>
+            <div class="w-11/12 max-w-xl mt-10 text-pink-600 w-full text-center border-[1px] border-gray-500 hover:underline">
+            Not already registered?
+            </div>
+        </div>
+    </body>
+</html>
+
+<script>
+    const emailInput = document.querySelector('#email');
+    const passwordInput = document.querySelector('#password');
+    const space = document.querySelector('#pwd');
+    const submit = document.querySelector('#login');
+    const validation = document.querySelector('#validation');
+    const loginDetails = {
+        email: '',
+        pwd: ''
+    };
+
+    const message = (detail) => validation.innerHTML = detail;
+
+    submit.addEventListener('click', async (e) => {
+        e.preventDefault();
+        loginDetails.email = emailInput.value;
+        loginDetails.pwd = passwordInput.value;
+        console.log(loginDetails);
+        if(loginDetails.email == '' || loginDetails.pwd == '') {
+            message('Please enter email and password!');
+            console.log(loginDetails.email);
+            console.log(loginDetails.pwd);
+        }
+
+        if (loginDetails.email != '' && loginDetails.pwd != '') {
+            await login('http://localhost:3000/passport-protected/login', loginDetails)
+                .then(data => {
+                        console.log(data);
+                        window.location = `${data.redirect}`;
+
+                })
+                .catch(err => {
+                    message('Please check your details and try again.')
+
+                    console.log('error: ' + err);
+                });
+        }
+    });
+
+    async function login(url = '', data = {}) {
+        const response = await fetch(url, {
+            method: 'POST',
+            mode: 'same-origin',
+            headers: {
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify(data)
+        });
+        return response.json();
+    }
+
+
+</script>

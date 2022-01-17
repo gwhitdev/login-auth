@@ -1,0 +1,124 @@
+<html>
+    <head>
+        <link href="/css/styles.css" rel="stylesheet" >
+        <title>Sign up</title>
+    </head>
+    <body>
+    <div class="flex flex-col  md:flex-row w-screen h-screen">
+
+        <div class="bg-purple-100 w-full h-screen">
+            <div class="text-indigo-900 object-contain mb-[100px] md:mt-[100px] ml-[125px] mr-[125px] overflow-auto">
+                <div>
+                    <span class="font-bold text-[3em]">
+                        Sign up
+                    </span>
+                </div>
+                <div class="mt-[100px]">
+                    <p>
+                        This is a demonstration of a form to sign-up new users.
+                    </p>
+                    <p class="mt-3">
+                        It is written in <strong>HTML</strong> and styled with <a href="https://tailwindcss.com"rel="noreferrer"target="_blank"class="underline hover:no-underline"><strong>Tailwind CSS</strong></a>. The form uses <strong>VanillaJS</strong> to send/receive the registration data.
+
+                        Behind the scenes, it utilises <a href="https://www.passportjs.org/" target="_blank" rel="noreferrer" class="underline hover:no-underline"><strong>PassportJS</strong></a> to complete the registration process with a
+                        simple <strong>SQLite3</strong> datastore.
+                    </p>
+                    <p class="mt-[100px]">
+                        Everything runs on <strong>NodeJS</strong>.
+                    </p>
+                </div>
+
+            </div>
+        </div>
+
+        <div class="flex flex-col justify-center mx-auto  w-full min-h-[500px] bg-white p-5 ">
+            <div class="mt-[100px] md:mt-5 relative py-3 w-full md:w-11/12 max-w-xl sm:mx-auto border-[0.5px] border-gray-300 rounded">
+
+                <div class="text-red-900 text-xl text-center" id="validation">
+                </div>
+                <div class="relative p-8">
+                    <div class="mt-8 text-left w-full floating-input relative" id="formSpace">
+                        <form class="w-full">
+                            <div class="floating-input relative mb-5">
+                                <input placeholder="you@youremail.com" autocomplete="off" class="focus:outline-none border-gray-200 focus:ring-1 focus:ring-gray-500 h-16 p-3 rounded-md w-full border-0 focus:shadow-sm" type="email" id="email">
+                                <label for="Email" class="absolute top-0 left-0 px-3 h-full pointer-events-none transform origin-left transition-all duration-100 ease-in-out">Enter email address:</label>
+                            </div>
+                            <div class="mt-3 floating-input relative mb-5">
+                                <input placeholder="Password" autocomplete="off" class="focus:outline-none p-3 h-16 rounded-md w-full border-0 focus:ring-gray-500 focus:shadow-sm" type="password" id="password">
+                                <label for="password" class="absolute top-0 left-0 px-3 h-full pointer-events-none transform origin-left transition-all duration-100 ease-in-out">Enter password:</label>
+                            </div>
+                            <div class="mt-3 floating-input relative mb-5">
+                                <input placeholder="Confirm Password" autocomplete="off" class="focus:outline-none p-3 h-16 rounded-md w-full border-0 focus:ring-gray-500 focus:shadow-sm" type="password" id="confirm-password">
+                                <label for="confirm-password" class="absolute top-0 left-0 px-3 h-full pointer-events-none transform origin-left transition-all duration-100 ease-in-out">Confirm password:</label>
+                            </div>
+                            <div class="mt-10 ">
+                                <button id="register" class="py-3 px-5 bg-purple-500  shadow-black shadow-sm w-[150px] transition-all rounded-md text-white transform hover:bg-purple-400 active:shadow-none ">Sign up</button>
+                            </div>
+
+                        </div>
+                    </form>
+
+                </div>
+            </div>
+             <div class="justify-center mx-auto md:w-11/12 max-w-xl relative w-full py-3 mt-10 text-pink-600 text-center border-[0.5px] rounded ">
+                Already registered? <a href="/login" class="underline hover:no-underline">Sign in to your existing account.</a>
+            </div>
+        </div>
+    </div>
+    </body>
+</html>
+
+<script>
+    const emailInput = document.querySelector('#email');
+    const passwordInput = document.querySelector('#password');
+    const confirmedPwd = document.querySelector('#confirm-password');
+    const space = document.querySelector('#pwd');
+    const submit = document.querySelector('#register');
+    const validation = document.querySelector('#validation');
+    const userDetails = {
+        email: '',
+        pwd: '',
+        confirmedPwd: ''
+    };
+
+    const message = (error) => validation.innerHTML = error;
+
+    submit.addEventListener('click', async (e) => {
+        e.preventDefault();
+        userDetails.email = emailInput.value;
+        userDetails.pwd = passwordInput.value;
+        userDetails.confirmedPwd = confirmedPwd.value;
+        console.log(userDetails);
+        if(userDetails.email === '' && (userDetails.pwd === '' || userDetails.pwd !== userDetails.confirmedPwd)) {
+            message('Please enter email and password!');
+            console.log(userDetails);
+        }
+
+        if (userDetails.email != '' && userDetails.pwd != '') {
+            await register('http://localhost:3000/passport-protected/register', userDetails)
+                .then(data => {
+                    message(data.message);
+                    window.location = `${data.redirect}`;
+                })
+                .catch(err => {
+                    message('Sorry, there is an unknown problem. Try again later.')
+                    console.log(err);
+                });
+        }
+    });
+
+    async function register(url = '', data = {}) {
+        const response = await fetch(url, {
+            method: 'POST',
+            mode: 'same-origin',
+            headers: {
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify(data)
+        });
+        if(response.status === 200) return response.json();
+        return 'Not registered';
+    }
+
+
+</script>

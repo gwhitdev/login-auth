@@ -1,0 +1,51 @@
+<html>
+     <head>
+            <link href="/css/styles.css" rel="stylesheet" >
+    </head>
+
+    <body>
+    <div class="flex flex-col w-full mx-auto justify-center mt-10">
+        <div class="flex mx-auto justify-center">
+            <button class="py-3 px-5 bg-black text-white" id="getData">Get</button>
+        </div>
+        <div class="bg-black text-white p-3 mt-10" hidden id="display">
+        </div>
+    </div>
+    </body>
+
+    <script>
+        const getData = document.querySelector('#getData');
+        const display = document.querySelector('#display');
+
+        async function grab(url='', data={}) {
+            const myData = await fetch(url, {
+                method: 'POST',
+                mode: 'same-origin',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+            })
+            console.log(myData.status);
+            if(myData.status === 200)return myData.json();
+            return {message: 'Unauthorised'};
+        }
+
+        getData.addEventListener('click', async () => {
+            await grab('/test/data')
+                .then(data => {
+                    console.log('message: ' + data.message);
+                    if(data.message === 'Authorised') {
+                        display.innerHTML = `<ul><li>${data.user.id}</li><li>${data.user.email}</li></ul>`;
+                        display.hidden = false;
+                    }
+                    else
+                    {
+                    console.log(data);
+                    display.hidden = false;
+                        display.innerHTML = 'Not authorised';
+                    }
+
+                })
+                .catch(err => console.log(err));
+        });
+    </script>

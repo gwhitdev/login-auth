@@ -1,0 +1,24 @@
+<html>
+    <head>
+            <link href="/css/styles.css" rel="stylesheet" >
+    </head>
+
+    <body>
+        <div class="flex mx-auto justify-center">
+            <div class="flex flex-row">
+                <button class="py-3 px-5 bg-purple-800 hover:bg-purple-500 text-white" id="login">Login</button>
+                <button class="py-3 px-5 bg-purple-800 hover:bg-purple-500 text-white" id="register">Register</button>
+            </div>
+        </div>
+    </body>
+
+    <script>
+        const loginButton = document.querySelector('#login');
+        const registerButton = document.querySelector('#register');
+
+        const login = () => window.location = '/login';
+        const register = () => window.location = '/register';
+
+        loginButton.addEventListener('click', login);
+        registerButton.addEventListener('click', register);
+    </script>
