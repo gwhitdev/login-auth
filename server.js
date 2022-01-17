@@ -1,6 +1,7 @@
+require('dotenv').config();
 const express = require('express');
 const app = express();
-const PORT = 3000;
+const PORT = process.env.PORT || 3000;
 const passport = require('passport');
 const view = require('./app/providers/views/view');
 const bodyParser = require('body-parser');
@@ -33,12 +34,10 @@ app.use(passport.session());
 view.parentDir = __dirname;
 
 const apiRouter = require('./app/routes/api');
-const testRouter = require('./app/routes/testing');
 const passportProtectedRoutes = require('./app/routes/passport-protected');
 const customAuth = require('./app/routes/custom-auth');
 
 app.use('/api', apiRouter);
-app.use('/test', testRouter);
 app.use('/passport-protected', passportProtectedRoutes);
 app.use('/custom-auth', customAuth);
 

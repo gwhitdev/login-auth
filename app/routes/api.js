@@ -2,7 +2,6 @@ const express = require('express');
 const router = express.Router();
 const passport = require('passport');
 
-const auth = require('../middleware/custom-jwt');
 
 const cookieParser = require('cookie-parser');
 
