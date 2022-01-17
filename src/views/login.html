@@ -66,7 +66,7 @@
         }
 
         if (loginDetails.email != '' && loginDetails.pwd != '') {
-            await login('http://localhost:3000/passport-protected/login', loginDetails)
+            await login('/passport-protected/login', loginDetails)
                 .then(data => {
                         console.log(data);
                         window.location = `${data.redirect}`;

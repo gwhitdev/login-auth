@@ -95,7 +95,7 @@
         }
 
         if (userDetails.email != '' && userDetails.pwd != '') {
-            await register('http://localhost:3000/passport-protected/register', userDetails)
+            await register('/passport-protected/register', userDetails)
                 .then(data => {
                     message(data.message);
                     window.location = `${data.redirect}`;
